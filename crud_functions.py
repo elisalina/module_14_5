@@ -5,6 +5,13 @@ cursor = connection.cursor()
 
 
 def initiate_db():
+    cursor.execute("""CREATE TABLE IF NOT EXISTS Users (
+                        id INTEGER PRIMERY KEY,
+                        username TEXT NOT NULL,
+                        email TEXT NOT NULL,
+                        age INTEGER NOT NULL,
+                        balance INTEGER NOT NULL
+                        )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS Products (
                         id INTEGER PRIMERY KEY,
                         title TEXT NOT NULL,
@@ -24,3 +31,16 @@ for num in range(1, 5):
 def get_all_products():
     cursor.execute('SELECT * FROM Products')
     return cursor.fetchall()
+
+def add_user(username, email, age):
+    cursor.execute("INSERT INTO Users (username, email, age, balance) VALUES (?, ?, ?, 1000)",
+                   (username, email, age))
+    connection.commit()
+
+def is_included(username):
+    cursor.execute('SELECT * FROM Users')
+    users = cursor.fetchall()
+    for user in users:
+        if user[1] == username:
+            return True
+    return False
